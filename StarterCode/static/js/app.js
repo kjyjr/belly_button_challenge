@@ -1,23 +1,15 @@
 /*
-Note: After initially completing the codes below for making the first sample bar and bubble charts (lines 6-70) as well as populating the Demographic Info table (lines 94-124), consultation was made with a BCS Learning Assistant about further code development to update those charts and table when a different subject ID was selected from the "Test Subject ID No:" dropdown list. That consultation yielded recommendations to wrap the code for making the bar and bubble charts into a function and likewise doing the same for the code for populating the Demographic Info table for those functions to be called later for making dynamic changes to the dashboard. Hence, "function base_charts(sample)" and its call on lines 4 and 72, respectively, and "function fill_demo()" and its call on lines 89 and 124, respectively.
+Note: After initially completing the codes below for making the first sample bar and bubble charts (lines 6-68) as well as populating the Demographic Info table (lines 87-118), consultation was made with a BCS Learning Assistant about further code development to update those charts and table when a different subject ID was selected from the "Test Subject ID No:" dropdown list. That consultation yielded recommendations to wrap the code for making the bar and bubble charts into a function and likewise doing the same for the code for populating the Demographic Info table for those functions to be called later for making dynamic changes to the dashboard - hence, "function charts()" and its call on lines 4 and 70, respectively, and "function demo()" and its call on lines 85 and 120, respectively.
 */
-function charts(sample)
+function charts()
   {
     d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json").then(function(data){
       console.log(data);
-
-      /*
+              
       let top10_sample_values = data.samples[0].sample_values.slice(0, 10);
       let top10_otu_ids = data.samples[0].otu_ids;
       let top10_otu_labels = data.samples[0].otu_labels;
-      */
-
-      // /*
-      let top10_sample_values = data.samples.filter(sampleObj => sampleObj.id == sample)[0].sample_values.slice(0, 10);
-      let top10_otu_ids = data.samples.filter(sampleObj => sampleObj.id == sample)[0].otu_ids;
-      let top10_otu_labels = data.samples.filter(sampleObj => sampleObj.id == sample)[0].otu_labels;
-      // */
-
+      
       let trace_otu = {
         x: top10_sample_values,
         y: top10_otu_ids.map(id => `OTU ${id}`),
@@ -35,11 +27,9 @@ function charts(sample)
         };
 
       Plotly.newPlot("bar", data_otu, layout_otu);
-
 /*
 To reach the code above for the horizontal bar chart, corrections were needed to my original code, and those corrections were identified by BCS Learning Assistants. First, all of the code following the first line for loading the data was placed inside the callback function to assure that the data was not just logged to the console but available for processing. The code involving "data.samples" was revised to include the .filter function. Likewise, to assure that the OTU IDs were obtained, "y:" in the trace_otu variable was revised by using the .map function. Also, different margins were advised for the layout than originally used. Lastly, to make the bars in the chart appear with the longest bar on top, tapering down to the shortest, an addition was made to the code for the layout. To that, "yaxis:{autorange: 'reversed'}" was inserted after researching the following source: https://stackoverflow.com/questions/46201532/plotly-js-reversing-the-horizontal-bar-chart-in-plotly.
 */
- 
       let sample_values = data.samples[0, 152].sample_values;
       let otu_ids = data.samples[0, 152].otu_ids;
       let otu_labels = data.samples[0, 152].otu_labels;
@@ -76,12 +66,11 @@ To reach the code above for the horizontal bar chart, corrections were needed to
       
       Plotly.newPlot('bubble', data, layout);
     });
-  }
-charts(sample);
+ }
+charts();
 /*
 The basic construct for the "var" lines in the above code for the bubble chart was made available through the following link provided by my class instructor: https://plotly.com/javascript/bubble-charts/. In addition, code for the x-axis title was derived from the following source, under "Styling Names": https://plotly.com/javascript/figure-labels/.
 */
-
 d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json").then((data) => {
   data.names.forEach((subject) => {
     let subject_list = d3.select("#selDataset");
@@ -93,7 +82,6 @@ d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1
 /*
 The above code for appending IDs to the Test Subject ID No: dropdown was achieved in coordination with a BCS Learning Assistant, revising and correcting my initial code.
 */
-
 function demo()
   {
     let demo_info = d3.select("#sample-metadata");
@@ -131,16 +119,16 @@ function demo()
   }
 demo();
 /*
-For the above section of code to populate the Demographic Info panel, I worked almost all of the code on my own. Two  exceptions were the insertion of "d3.select("#sample-metadata").html("");" at line 98 and "demo_info.append("br");" at lines 103, 107, 111, 115, 119, and 123. All of those insertions were suggested by BCS Learning Assistants whom I consulted about coding for updating the dashboard itself when different subject IDs are selected. The code at line 98 was inserted to assure that only one set of metadata for a given subject ID is displayed, and the code inserted on the other lines serves to provide breaks between the different elements displayed in the panel.
+For the above section of code to populate the Demographic Info panel, I worked almost all of the code on my own. Two  exceptions were the insertion of "d3.select("#sample-metadata").html("");" at line 88 and "demo_info.append("br");" at lines 93, 97, 101, 105, 109, and 113. All of those insertions were suggested by BCS Learning Assistants whom I consulted about coding for updating the dashboard itself when different subject IDs are selected. The code at line 88 was inserted to assure that only one set of metadata for a given subject ID is displayed, and the code inserted on the other lines serves to provide breaks between the different elements displayed in the panel.
 */
-
-function optionChanged(value)
-// {console.log("Test"); console.log("Selected value:", value)}; // confirms function works and displays ID selected from dropdown list
-  {
-    charts(value);
-    demo(value);
-  }
+function optionChanged()
+    {
+      charts();
+      demo();
+    }
 
 let subject_list = d3.select("#selDataset");
-subject_list.filter(optionChanged)
 subject_list.on("change", function() {optionChanged(this.value);});
+/*
+The code on lines 124-131 was constructed based on recommendations provided by various BCS Learning Assistants. However, despite their recommnedations on the basic construct of the code, the precise syntax was not realized to effect a complete update of the dashboard visuals when a different test subject id is selected.
+*/
